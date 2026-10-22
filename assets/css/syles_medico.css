@@ -1,0 +1,375 @@
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    z-index: 1000;
+
+    background: linear-gradient(
+        180deg,
+        #0f5132 0%,
+        #198754 50%,
+        #20c997 100%
+    );
+
+    color: white;
+    box-shadow: 4px 0 20px rgba(0,0,0,.15);
+}
+
+.perfil{
+    text-align: center;
+    padding: 10px;
+}
+
+.foto-container{
+    display: flex;
+    justify-content: center;
+}
+
+.foto-medico{
+    width: 95px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,.25);
+    transition: all .4s ease;
+}
+
+.foto-medico:hover{
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255,255,255,.45);
+}
+
+.perfil h5{
+    color: white;
+    font-weight: 700;
+}
+
+.perfil .badge{
+    background: rgba(255,255,255,.9) !important;
+    color: #0f5132 !important;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 8px 16px;
+}
+
+.perfil p{
+    color: rgba(255,255,255,.85);
+}
+
+.sidebar .nav{
+    margin-top: 15px;
+}
+
+.sidebar .nav-link{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 5px 10px;
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    color: white !important;
+    background: rgba(255,255,255,.08);
+
+    text-decoration: none;
+    transition: all .3s ease;
+}
+
+.sidebar .nav-link i{
+    font-size: 1.2rem;
+    transition: .3s;
+}
+
+.sidebar .nav-link:hover{
+    background: rgba(255,255,255,.18);
+    color: white !important;
+    transform: translateX(8px);
+}
+
+.sidebar .nav-link:hover i{
+    transform: scale(1.2);
+}
+
+.sidebar .nav-link.active{
+    background: rgba(255,255,255,.25);
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(255,255,255,.15);
+}
+
+.logout-btn{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 10px;
+    margin-bottom: 20px;
+
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    color: #ffe5e5 !important;
+    background: rgba(220,53,69,.25);
+
+    transition: all .3s ease;
+}
+
+.logout-btn:hover{
+    background: rgba(220,53,69,.45);
+    color: white !important;
+    transform: translateX(8px);
+}
+
+.sidebar::-webkit-scrollbar{
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.25);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover{
+    background: rgba(255,255,255,.45);
+}
+
+.main-content{
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    min-height: 100vh;
+}
+
+@media (max-width: 768px){
+
+    .sidebar{
+        width: 250px;
+        transform: translateX(-100%);
+        transition: .3s;
+    }
+
+    .sidebar.active{
+        transform: translateX(0);
+    }
+
+    .main-content{
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    min-height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+
+    background: linear-gradient(
+        180deg,
+        #0f5132 0%,
+        #198754 50%,
+        #20c997 100%
+    );
+
+    color: white;
+    box-shadow: 4px 0 20px rgba(0,0,0,.15);
+}
+
+.perfil{
+    text-align: center;
+    padding: 10px;
+}
+
+.foto-container{
+    display: flex;
+    justify-content: center;
+}
+
+.foto-medico{
+    width: 95px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,.25);
+    transition: all .4s ease;
+}
+
+.foto-medico:hover{
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255,255,255,.45);
+}
+
+.perfil h5{
+    color: white;
+    font-weight: 700;
+}
+
+.perfil .badge{
+    background: rgba(255,255,255,.9) !important;
+    color: #0f5132 !important;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 8px 16px;
+}
+
+.perfil p{
+    color: rgba(255,255,255,.85);
+}
+
+.sidebar .nav{
+    margin-top: 15px;
+}
+
+.sidebar .nav-link{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 5px 10px;
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    color: white !important;
+    background: rgba(255,255,255,.08);
+
+    text-decoration: none;
+    transition: all .3s ease;
+}
+
+.sidebar .nav-link i{
+    font-size: 1.2rem;
+    transition: .3s;
+}
+
+.sidebar .nav-link:hover{
+    background: rgba(255,255,255,.18);
+    color: white !important;
+    transform: translateX(8px);
+}
+
+.sidebar .nav-link:hover i{
+    transform: scale(1.2);
+}
+
+.sidebar .nav-link.active{
+    background: rgba(255,255,255,.25);
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(255,255,255,.15);
+}
+
+.logout-btn{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 10px;
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    color: #ffe5e5 !important;
+    background: rgba(220,53,69,.25);
+
+    transition: all .3s ease;
+}
+
+.logout-btn:hover{
+    background: rgba(220,53,69,.45);
+    color: white !important;
+    transform: translateX(8px);
+}
+
+.sidebar::-webkit-scrollbar{
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.25);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover{
+    background: rgba(255,255,255,.45);
+}
+
+.main-content{
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    min-height: 100vh;
+}
+
+@media (max-width: 768px){
+
+    .sidebar{
+        width: 250px;
+        transform: translateX(-100%);
+        transition: .3s;
+    }
+
+    .sidebar.active{
+        transform: translateX(0);
+    }
+
+    .main-content{
+        margin-left: 0;
+        width: 100%;
+    }
+}
+.sidebar-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #198754, #0f5132);
+    color: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    opacity: 0.9;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+}

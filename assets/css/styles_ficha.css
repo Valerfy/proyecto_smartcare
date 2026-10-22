@@ -1,0 +1,116 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #1a2a3a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+.ficha {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+.ficha-header {
+    background: #1a2a3a;
+    color: #fff;
+    text-align: center;
+    padding: 28px 20px;
+}
+
+.ficha-header h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.3;
+}
+
+.ficha-body {
+    padding: 30px 28px;
+    text-align: center;
+}
+
+.info {
+    margin-bottom: 14px;
+}
+
+.info .label {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+}
+
+.info strong {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #1a2a3a;
+    display: block;
+}
+
+.qr {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.qr img {
+    width: 160px;
+    height: 160px;
+}
+
+.paciente {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a2a3a;
+    margin-top: 14px;
+}
+
+.ficha-footer {
+    background: #2196f3;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.btn-acciones {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-print  { background: #28a745; color: #fff; }
+.btn-back   { background: #6c757d; color: #fff; }
+.btn-print:hover { background: #218838; }
+.btn-back:hover  { background: #545b62; }
+
+@media print {
+    body { background: #fff; }
+    .btn-acciones { display: none; }
+    .ficha { box-shadow: none; }
+}
