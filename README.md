@@ -39,23 +39,20 @@ Aplicación web desarrollada con **PHP** y **MySQL** para la gestión de citas m
 
 - [XAMPP](https://www.apachefriends.org/) instalado (incluye Apache, MySQL y phpMyAdmin).
 - Un navegador web actualizado.
+- [Git](https://git-scm.com/) (solo si clonas el repositorio).
 - *(Opcional)* [Ollama](https://ollama.com/) para el chatbot.
 
 ## Instalación
 
 ### 1. Obtener el proyecto
 
-Clona el repositorio **`proyecto_smartcare`** desde GitHub. Requiere tener [Git](https://git-scm.com/) instalado.
-
 Abre una terminal (CMD, PowerShell o Git Bash) y ejecuta:
 
 ```bash
 cd C:\xampp\htdocs
-git clone https://github.com/<usuario>/proyecto_smartcare.git
+git clone https://github.com/Valerfy/proyecto_smartcare.git
 cd proyecto_smartcare
 ```
-
-Reemplaza `<usuario>` por el usuario u organización de GitHub dueño del repositorio.
 
 Para actualizar tu copia local más adelante:
 
@@ -63,7 +60,7 @@ Para actualizar tu copia local más adelante:
 git pull origin main
 ```
 
-> Si prefieres descargar el repositorio como ZIP, extráelo y verifica que la carpeta se llame exactamente `proyecto_smartcare`.
+> Si prefieres descargar el repositorio como ZIP, extráelo y **renombra la carpeta a exactamente `proyecto_smartcare`** (GitHub la nombra `proyecto_smartcare-main`; si no la renombras, las rutas de abajo no funcionarán).
 
 ### 2. Ubicar el proyecto en XAMPP
 
@@ -82,7 +79,7 @@ Abre el **Panel de Control de XAMPP** e inicia **Apache** y **MySQL**.
 ### 4. Crear la base de datos
 
 1. Abre [http://localhost/phpmyadmin/](http://localhost/phpmyadmin/) en el navegador.
-2. Importa el archivo:
+2. Ve a la pestaña **Importar** y selecciona el archivo:
 
    ```
    proyecto_smartcare/database/cns_sistema_v2.sql
@@ -148,5 +145,4 @@ proyecto_smartcare/
 |---|---|
 | Matías Valero Fernández | [@Valerfy](https://github.com/Valerfy) |
 | Juan Anuar Vargas Claros | [@Anufox](https://github.com/Anufox) |
-| Jhonatan Torrez Pocoma | [@usuario-github](https://github.com/usuario-github) |
-
+| Jhonatan Torrez Pocoma | *(por completar)* |
