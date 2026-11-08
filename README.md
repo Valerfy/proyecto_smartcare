@@ -145,4 +145,4 @@ proyecto_smartcare/
 |---|---|
 | Matías Valero Fernández | [@Valerfy](https://github.com/Valerfy) |
 | Juan Anuar Vargas Claros | [@Anufox](https://github.com/Anufox) |
-| Jhonatan Torrez Pocoma | *(por completar)* |
+| Jhonatan Torrez Pocoma | *@2cuentajtp-del |
