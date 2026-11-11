@@ -13,6 +13,7 @@ Aplicación web desarrollada con **PHP** y **MySQL** para la gestión de citas m
 - [Requisitos previos](#requisitos-previos)
 - [Instalación](#instalación)
 - [Credenciales de prueba](#credenciales-de-prueba)
+- [Modo demostración](#modo-demostración)
 - [Chatbot con IA (opcional)](#chatbot-con-ia-opcional)
 - [Estructura relevante del proyecto](#estructura-relevante-del-proyecto)
 - [Integrantes](#integrantes)
@@ -22,8 +23,13 @@ Aplicación web desarrollada con **PHP** y **MySQL** para la gestión de citas m
 ## Características
 
 - Inicio de sesión con acceso diferenciado por rol: **Paciente, Médico, Administrador y Recepcionista**.
-- Gestión de citas médicas y atención médica.
-- Base de datos con datos de prueba listos para usar.
+- Registro de nuevos pacientes con validación de datos (CI, celular, edad mínima de 18 años y contraseña).
+- Gestión de citas médicas y atención médica: agendar, editar, atender y registrar diagnósticos.
+- Botón **Volver** propio del sitio en todos los paneles: recuerda las últimas páginas visitadas y regresa a la anterior sin usar el botón del navegador.
+- **Reportes clínicos del médico** con filtros por rango de fechas y por paciente, y exportación a PDF.
+- **Reporte de fichas de recepción** con filtros por nombre o CI, médico, rango de fechas y tipo de paciente (nuevo o antiguo). El PDF respeta los filtros y solo se abre con sesión de recepcionista.
+- Base de datos normalizada (3FN) con 17 tablas, llaves foráneas y datos de prueba listos para usar.
+- Contraseñas almacenadas cifradas con `password_hash`.
 - Chatbot con IA local (opcional) mediante Ollama.
 
 ## Tecnologías
@@ -31,6 +37,8 @@ Aplicación web desarrollada con **PHP** y **MySQL** para la gestión de citas m
 | Componente | Tecnología |
 |---|---|
 | Backend | PHP |
+| Frontend | HTML, CSS, JavaScript, Bootstrap 5 y Bootstrap Icons |
+| Control de versiones | Git y GitHub |
 | Base de datos | MySQL |
 | Servidor local | XAMPP (Apache + MySQL) |
 | Chatbot (opcional) | Ollama + modelo `qwen3:4b` |
@@ -132,11 +140,23 @@ Inicia sesión con cada cuenta para comprobar los distintos paneles y sus funcio
 
 ```
 proyecto_smartcare/
+├── assets/                   # CSS, JavaScript e imágenes (fotos de perfil)
 ├── config/
 │   └── conexion.php          # Conexión a la base de datos
+├── controllers/              # Lógica de cada rol (Auth, Paciente, Medico, Admin, Helper, Chatbot)
 ├── database/
 │   └── cns_sistema_v2.sql    # Script de la base de datos y datos de prueba
-└── public/                   # Punto de entrada (Login)
+├── models/                   # Acceso a datos (Usuario, Cita, Historial, Reportes...)
+├── public/                   # Punto de entrada: enrutador y Login
+├── views/
+│   ├── admin/                # Panel del administrador
+│   ├── auth/                 # Inicio de sesión y registro
+│   ├── components/
+│   │   └── volver.php        # Botón "Volver" compartido por todos los roles
+│   ├── helper/               # Panel del recepcionista
+│   ├── medico/               # Panel del médico
+│   └── paciente/             # Panel del paciente
+└── README.md
 ```
 
 ## Integrantes
