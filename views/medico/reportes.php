@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../components/reporte_utils.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -26,40 +27,117 @@
             <?php include __DIR__ . '/../components/volver.php'; ?>
 
             <?php
-                $totalCompletadas = 0; $totalPendientes = 0; $totalCanceladas = 0;
-                foreach ($estadisticas['citas_por_estado'] as $e) {
-                    if ($e['estado'] === 'completada') $totalCompletadas = $e['total'];
-                    if ($e['estado'] === 'pendiente')  $totalPendientes  = $e['total'];
-                    if ($e['estado'] === 'cancelada')  $totalCanceladas  = $e['total'];
-                }
+                $periodoAnt      = $periodoAnt      ?? null;
+                $estadisticasAnt = $estadisticasAnt ?? null;
+
+                $totalCitas       = rep_total_citas($estadisticas);
+                $totalCompletadas = rep_estado($estadisticas, 'completada');
+                $totalPendientes  = rep_estado($estadisticas, 'pendiente');
+                $totalCanceladas  = rep_estado($estadisticas, 'cancelada');
+                $pacUnicos        = (int)$estadisticas['pacientes_unicos'];
+
+                // Valores del periodo anterior (null = no hay comparación)
+                $antCompletadas = $estadisticasAnt ? rep_estado($estadisticasAnt, 'completada') : null;
+                $antPendientes  = $estadisticasAnt ? rep_estado($estadisticasAnt, 'pendiente')  : null;
+                $antCanceladas  = $estadisticasAnt ? rep_estado($estadisticasAnt, 'cancelada')  : null;
+                $antPacientes   = $estadisticasAnt ? (int)$estadisticasAnt['pacientes_unicos']   : null;
             ?>
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-2">
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-sm text-center p-3">
+                    <div class="card border-0 shadow-sm text-center p-3 h-100">
                         <i class="bi bi-check-circle-fill text-success fs-2 mb-2"></i>
                         <h3 class="fw-bold mb-0"><?= $totalCompletadas ?></h3>
                         <small class="text-muted">Citas Completadas</small>
+                        <div class="small fw-semibold mt-1"><?= rep_pct($totalCompletadas, $totalCitas) ?> del total</div>
+                        <div class="mt-1"><?= rep_delta($totalCompletadas, $antCompletadas, true) ?></div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-sm text-center p-3">
+                    <div class="card border-0 shadow-sm text-center p-3 h-100">
                         <i class="bi bi-clock-fill text-warning fs-2 mb-2"></i>
                         <h3 class="fw-bold mb-0"><?= $totalPendientes ?></h3>
                         <small class="text-muted">Citas Pendientes</small>
+                        <div class="small fw-semibold mt-1"><?= rep_pct($totalPendientes, $totalCitas) ?> del total</div>
+                        <div class="mt-1"><?= rep_delta($totalPendientes, $antPendientes, null) ?></div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-sm text-center p-3">
+                    <div class="card border-0 shadow-sm text-center p-3 h-100">
                         <i class="bi bi-x-circle-fill text-danger fs-2 mb-2"></i>
                         <h3 class="fw-bold mb-0"><?= $totalCanceladas ?></h3>
                         <small class="text-muted">Citas Canceladas</small>
+                        <div class="small fw-semibold mt-1"><?= rep_pct($totalCanceladas, $totalCitas) ?> del total</div>
+                        <div class="mt-1"><?= rep_delta($totalCanceladas, $antCanceladas, false) ?></div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-sm text-center p-3">
+                    <div class="card border-0 shadow-sm text-center p-3 h-100">
                         <i class="bi bi-people-fill text-primary fs-2 mb-2"></i>
-                        <h3 class="fw-bold mb-0"><?= $estadisticas['pacientes_unicos'] ?></h3>
+                        <h3 class="fw-bold mb-0"><?= $pacUnicos ?></h3>
                         <small class="text-muted">Pacientes Únicos</small>
+                        <div class="small fw-semibold mt-1">&nbsp;</div>
+                        <div class="mt-1"><?= rep_delta($pacUnicos, $antPacientes, true) ?></div>
+                    </div>
+                </div>
+            </div>
+            <p class="small text-muted mb-4">
+                <?php if ($periodoAnt): ?>
+                    <i class="bi bi-arrow-left-right me-1"></i>
+                    Comparado con el periodo anterior (<?= rep_fecha($periodoAnt[0]) ?> al <?= rep_fecha($periodoAnt[1]) ?>).
+                <?php else: ?>
+                    <i class="bi bi-info-circle me-1"></i>
+                    Indica <strong>Desde</strong> y <strong>Hasta</strong> en el filtro para comparar con el periodo anterior.
+                <?php endif; ?>
+                Porcentajes sobre el total de citas del periodo (<?= $totalCitas ?>, incluye confirmadas).
+            </p>
+
+            <?php
+                // ---- Datos para los gráficos de pastel ----
+                $coloresEstado = ['completada'=>'#198754','pendiente'=>'#ffc107','confirmada'=>'#0d6efd','cancelada'=>'#dc3545'];
+                $pieEstadoLabels = []; $pieEstadoData = []; $pieEstadoColors = [];
+                foreach ($estadisticas['citas_por_estado'] as $e) {
+                    $pieEstadoLabels[] = ucfirst($e['estado']);
+                    $pieEstadoData[]   = (int)$e['total'];
+                    $pieEstadoColors[] = $coloresEstado[$e['estado']] ?? '#6c757d';
+                }
+                $edadConteo   = rep_edad_rangos($historiales);
+                $sangreConteo = rep_sangre_pacientes($historiales);
+            ?>
+            <div class="row g-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-pie-chart-fill me-2"></i>Citas por estado</h6>
+                            <?php if (array_sum($pieEstadoData) === 0): ?>
+                                <p class="text-muted text-center py-5 mb-0">Sin datos para graficar.</p>
+                            <?php else: ?>
+                                <div style="position:relative; height:280px;"><canvas id="pieEstados"></canvas></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-person-lines-fill me-2"></i>Pacientes por rango de edad</h6>
+                            <?php if (empty($edadConteo)): ?>
+                                <p class="text-muted text-center py-5 mb-0">Sin datos para graficar.</p>
+                            <?php else: ?>
+                                <div style="position:relative; height:280px;"><canvas id="pieEdad"></canvas></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-droplet-fill me-2"></i>Pacientes por tipo de sangre</h6>
+                            <?php if (empty($sangreConteo)): ?>
+                                <p class="text-muted text-center py-5 mb-0">Sin datos para graficar.</p>
+                            <?php else: ?>
+                                <div style="position:relative; height:280px;"><canvas id="pieSangre"></canvas></div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -114,10 +192,16 @@
                         <span class="badge bg-secondary ms-2"><?= count($historiales) ?> registros</span>
                     </span>
                     <?php if (!empty($historiales)): ?>
-                    <a href="index.php?controller=medico&action=exportarReportePDF
-                        <?= !empty($fechaDesde)  ? '&fecha_desde='  . urlencode($fechaDesde)  : '' ?>
-                        <?= !empty($fechaHasta)  ? '&fecha_hasta='  . urlencode($fechaHasta)  : '' ?>
-                        <?= !empty($pacienteId)  ? '&paciente_id='  . urlencode($pacienteId)  : '' ?>"
+                    <?php
+                        $qsPdf = http_build_query(array_filter([
+                            'controller'  => 'medico',
+                            'action'      => 'exportarReportePDF',
+                            'fecha_desde' => $fechaDesde,
+                            'fecha_hasta' => $fechaHasta,
+                            'paciente_id' => $pacienteId,
+                        ], fn($v) => $v !== '' && $v !== null));
+                    ?>
+                    <a href="index.php?<?= htmlspecialchars($qsPdf) ?>"
                        target="_blank"
                        class="btn btn-danger btn-sm">
                         <i class="bi bi-file-earmark-pdf me-1"></i> Exportar PDF
@@ -206,6 +290,38 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+function crearPastel(id, labels, data, colors) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Chart(el, {
+        type: 'pie',
+        data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderColor: '#fff', borderWidth: 2 }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx) {
+                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = total ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                            return ' ' + ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+crearPastel('pieEstados', <?= json_encode($pieEstadoLabels) ?>, <?= json_encode($pieEstadoData) ?>, <?= json_encode($pieEstadoColors) ?>);
+crearPastel('pieEdad',    <?= json_encode(array_keys($edadConteo)) ?>, <?= json_encode(array_values($edadConteo)) ?>,
+    ['#2a9d82','#0d6efd','#ffc107','#fd7e14','#6f42c1','#6c757d']);
+crearPastel('pieSangre',  <?= json_encode(array_keys($sangreConteo)) ?>, <?= json_encode(array_values($sangreConteo)) ?>,
+    ['#dc3545','#fd7e14','#ffc107','#198754','#0dcaf0','#0d6efd','#6f42c1','#d63384','#6c757d']);
+</script>
 <script src="../assets/js/sidebar.js"></script>
 </body>
 </html>

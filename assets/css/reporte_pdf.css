@@ -1,0 +1,132 @@
+/* Estilos compartidos de los reportes PDF (médico y recepción).
+   Paleta institucional del login: #0b6b57 / #2a9d82 / #004840 */
+:root{
+    --a1:#0b6b57; --a2:#2a9d82; --a3:#004840;
+    --ink:#0f172a; --mut:#64748b; --line:#e2e8f0; --soft:#f1f7f5;
+}
+*{ box-sizing:border-box; }
+
+/* Obliga a imprimir los colores de fondo (si no, salen en blanco) */
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+body{
+    font-family:'Segoe UI', Arial, Helvetica, sans-serif;
+    color:var(--ink);
+    margin:0;
+    padding:24px 30px 40px;
+    font-size:12px;
+    line-height:1.35;
+}
+
+/* ---------- Encabezado ---------- */
+.rep-header{
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:3px solid var(--a1);
+    padding-bottom:12px; margin-bottom:16px;
+}
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand img{ width:58px; height:58px; object-fit:contain; }
+.brand .org{ font-size:10px; color:var(--mut); text-transform:uppercase; letter-spacing:.08em; }
+.brand .sys{ font-size:18px; font-weight:700; color:var(--a3); }
+.doc-title{ text-align:right; }
+.doc-title h1{ margin:0; font-size:22px; color:var(--a1); letter-spacing:.01em; }
+.doc-title small{ color:var(--mut); font-size:11px; }
+
+/* ---------- Datos del reporte ---------- */
+.info-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px 18px;
+    background:var(--soft); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; margin-bottom:16px;
+}
+.info-grid .k{ font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); }
+.info-grid .v{ font-weight:600; font-size:12px; }
+
+/* ---------- Títulos de sección ---------- */
+.sec{
+    margin:20px 0 10px; font-size:14px; color:var(--a3);
+    border-left:4px solid var(--a2); padding-left:8px;
+    break-after:avoid; page-break-after:avoid;
+}
+.sec .count{ color:var(--mut); font-weight:400; font-size:11px; margin-left:6px; }
+
+/* ---------- Tarjetas de resumen ---------- */
+.cards{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:10px;
+}
+.card{
+    border:1px solid var(--line); border-top:4px solid var(--c, var(--a1));
+    border-radius:8px; padding:10px 8px; text-align:center; background:#fff;
+    break-inside:avoid; page-break-inside:avoid;
+}
+.card .n{ font-size:26px; font-weight:700; line-height:1.1; color:var(--c, var(--a1)); }
+.card .l{ font-size:10.5px; color:var(--mut); text-transform:uppercase; letter-spacing:.04em; margin-top:2px; }
+.card .p{ font-size:11px; color:var(--ink); margin-top:5px; font-weight:600; }
+.card .d{ margin-top:3px; min-height:15px; }
+.nota{ font-size:10px; color:var(--mut); margin:8px 0 0; }
+
+/* ---------- Gráficos ---------- */
+.charts{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px;
+}
+.chart-box{
+    border:1px solid var(--line); border-radius:8px; padding:10px;
+    text-align:center; break-inside:avoid; page-break-inside:avoid;
+}
+.chart-box h3{ margin:0 0 6px; font-size:12px; color:var(--a3); }
+.chart-box canvas{ max-width:100%; }
+.sin-datos{ color:var(--mut); padding:70px 0; font-size:11px; }
+
+/* ---------- Tabla de datos ---------- */
+table.data{ width:100%; border-collapse:collapse; font-size:10.5px; }
+table.data thead{ display:table-header-group; }          /* repite el encabezado en cada página */
+table.data th{
+    background:var(--a1); color:#fff; text-align:left;
+    padding:7px 8px; font-weight:600; font-size:10px;
+    text-transform:uppercase; letter-spacing:.03em;
+}
+table.data td{ padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.data tbody tr:nth-child(even){ background:#f6faf9; }
+table.data tr{ break-inside:avoid; page-break-inside:avoid; }   /* no corta filas entre páginas */
+table.data td.c, table.data th.c{ text-align:center; }
+table.data .muted{ color:var(--mut); }
+table.data .alerta{ color:#b45309; font-size:9.5px; }
+.vacio{ text-align:center; color:var(--mut); padding:22px !important; }
+
+.badge{
+    display:inline-block; padding:1px 8px; border-radius:10px;
+    font-size:9.5px; font-weight:700; white-space:nowrap;
+}
+.badge.sangre{ background:#fee2e2; color:#991b1b; }
+.badge.nuevo{ background:#dcfce7; color:#166534; }
+.badge.antiguo{ background:#dbeafe; color:#1e40af; }
+
+/* ---------- Firmas y pie ---------- */
+.firmas{
+    display:flex; justify-content:space-around; margin-top:70px;
+    break-inside:avoid; page-break-inside:avoid;
+}
+.firma{ width:250px; text-align:center; border-top:1px solid var(--ink); padding-top:6px; font-size:11px; }
+.firma small{ color:var(--mut); display:block; }
+.pie-doc{
+    margin-top:26px; padding-top:8px; border-top:1px solid var(--line);
+    font-size:9.5px; color:var(--mut); text-align:center;
+}
+
+/* Botón de reimprimir (solo en pantalla) */
+.no-print{ text-align:right; margin-bottom:10px; }
+.no-print button{
+    background:var(--a1); color:#fff; border:0; border-radius:6px;
+    padding:8px 16px; font-size:12px; cursor:pointer;
+}
+
+/* ---------- Impresión ---------- */
+@page{
+    size:A4 landscape;
+    margin:12mm 10mm 16mm;
+    @bottom-left{  content:"SmartCare CNS · Caja Nacional de Salud"; font-size:9px; color:#64748b; }
+    @bottom-right{ content:"Página " counter(page) " de " counter(pages); font-size:9px; color:#64748b; }
+}
+@media print{
+    body{ padding:0; }
+    .no-print{ display:none !important; }
+}

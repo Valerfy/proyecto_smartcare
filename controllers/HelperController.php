@@ -131,8 +131,35 @@ require_once __DIR__ . '/../views/helper/helper.php';
     
         public static function exportarReportePDF() {
         self::requireAuth('recepcionista');
+        require_once __DIR__ . '/../views/components/reporte_utils.php';
+
         $filtros = ReporteRecepcionModel::filtrosDesdeGet($_GET);
         $fichas  = ReporteRecepcionModel::listarFichas($filtros);
+
+        // Nombre del médico filtrado (para mostrarlo en el encabezado del PDF)
+        $medicoNombre = '';
+        if (!empty($filtros['medico_id'])) {
+            foreach (MedicoModel::listar() as $m) {
+                if ((int)$m['medico_id'] === (int)$filtros['medico_id']) {
+                    $medicoNombre = trim($m['nombre'] . ' ' . $m['apellido']);
+                    break;
+                }
+            }
+        }
+
+        // Comparación con el periodo anterior (solo si hay Desde y Hasta)
+        $periodoAnt = rep_periodo_anterior($filtros['fecha_desde'], $filtros['fecha_hasta']);
+        $antTotal = $antNuevos = $antAntiguos = null;
+        if ($periodoAnt) {
+            $fAnt = $filtros;
+            $fAnt['fecha_desde'] = $periodoAnt[0];
+            $fAnt['fecha_hasta'] = $periodoAnt[1];
+            $fichasAnt   = ReporteRecepcionModel::listarFichas($fAnt);
+            $antTotal    = count($fichasAnt);
+            $antNuevos   = count(array_filter($fichasAnt, fn($f) => ($f['tipo_usuario'] ?? '') === 'Nuevo'));
+            $antAntiguos = $antTotal - $antNuevos;
+        }
+
         require_once __DIR__ . '/../views/helper/reporte_pdf.php';
         exit();
     }

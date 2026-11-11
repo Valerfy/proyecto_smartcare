@@ -145,6 +145,7 @@ class MedicoController {
 public static function reportes() {
         self::requireAuth('medico');
         require_once __DIR__ . '/../models/ReporteModel.php';
+        require_once __DIR__ . '/../views/components/reporte_utils.php';
 
         $uid      = $_SESSION['usuario_id'];
         $medico   = MedicoModel::findByUsuarioId($uid);
@@ -159,12 +160,19 @@ public static function reportes() {
         $estadisticas = ReporteModel::estadisticasMedico($medicoId, $fechaDesde, $fechaHasta);
         $pacientes    = ReporteModel::pacientesParaFiltro($medicoId);
 
+        // Comparación con el periodo anterior (solo si hay Desde y Hasta)
+        $periodoAnt      = rep_periodo_anterior($fechaDesde, $fechaHasta);
+        $estadisticasAnt = $periodoAnt
+            ? ReporteModel::estadisticasMedico($medicoId, $periodoAnt[0], $periodoAnt[1])
+            : null;
+
         require_once __DIR__ . '/../views/medico/reportes.php';
     }
 
     public static function exportarReportePDF() {
         self::requireAuth('medico');
         require_once __DIR__ . '/../models/ReporteModel.php';
+        require_once __DIR__ . '/../views/components/reporte_utils.php';
 
         $uid      = $_SESSION['usuario_id'];
         $medico   = MedicoModel::findByUsuarioId($uid);
@@ -176,6 +184,11 @@ public static function reportes() {
 
         $historiales  = ReporteModel::historialParaReporte($medicoId, $fechaDesde, $fechaHasta, $pacienteId);
         $estadisticas = ReporteModel::estadisticasMedico($medicoId, $fechaDesde, $fechaHasta);
+
+        $periodoAnt      = rep_periodo_anterior($fechaDesde, $fechaHasta);
+        $estadisticasAnt = $periodoAnt
+            ? ReporteModel::estadisticasMedico($medicoId, $periodoAnt[0], $periodoAnt[1])
+            : null;
 
         $nombreMedico = 'Dr(a). ' . htmlspecialchars($medico['nombre'] . ' ' . $medico['apellido']);
         $especialidad = htmlspecialchars($medico['especialidad'] ?? '');

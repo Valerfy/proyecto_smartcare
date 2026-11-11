@@ -255,6 +255,29 @@ $horarios = ['08:00:00','08:30:00','09:00:00','09:30:00','10:00:00','10:30:00','
             </div>
         </form>
 
+        <?php
+            // ---- Datos para los gráficos de pastel (respetan los filtros) ----
+            $cNuevos = 0; $cAntiguos = 0; $porMedico = [];
+            foreach ($reporteFichas as $r) {
+                if (($r['tipo_usuario'] ?? '') === 'Nuevo') $cNuevos++; else $cAntiguos++;
+                $nm = trim(($r['medico_nombre'] ?? '') . ' ' . ($r['medico_apellido'] ?? '')) ?: 'Sin nombre';
+                $porMedico[$nm] = ($porMedico[$nm] ?? 0) + 1;
+            }
+            arsort($porMedico);
+        ?>
+        <?php if (!empty($reporteFichas)): ?>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-bottom:25px;">
+            <div style="border:1px solid #e5e7eb; border-radius:10px; padding:15px;">
+                <h3 style="font-size:16px; margin-bottom:10px;">Pacientes nuevos vs. antiguos</h3>
+                <div style="position:relative; height:280px;"><canvas id="pieTipo"></canvas></div>
+            </div>
+            <div style="border:1px solid #e5e7eb; border-radius:10px; padding:15px;">
+                <h3 style="font-size:16px; margin-bottom:10px;">Fichas por médico</h3>
+                <div style="position:relative; height:280px;"><canvas id="pieMedicos"></canvas></div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <p style="margin-bottom:12px;"><strong><?= count($reporteFichas) ?></strong> ficha(s) encontrada(s)</p>
 
         <a href="index.php?controller=helper&action=exportarReportePDF&q=<?= urlencode($filtros['q']) ?>&medico_id=<?= (int)$filtros['medico_id'] ?>&fecha_desde=<?= urlencode($filtros['fecha_desde']) ?>&fecha_hasta=<?= urlencode($filtros['fecha_hasta']) ?>&tipo=<?= urlencode($filtros['tipo']) ?>"
@@ -332,6 +355,34 @@ $horarios = ['08:00:00','08:30:00','09:00:00','09:30:00','10:00:00','10:30:00','
 
 </div>
 
+<?php if ($tab === 'reportes' && !empty($reporteFichas)): ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+function crearPastel(id, labels, data, colors) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Chart(el, {
+        type: 'pie',
+        data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderColor: '#fff', borderWidth: 2 }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { callbacks: { label: function (ctx) {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = total ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                    return ' ' + ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                } } }
+            }
+        }
+    });
+}
+crearPastel('pieTipo', ['Nuevos', 'Antiguos'], [<?= (int)$cNuevos ?>, <?= (int)$cAntiguos ?>], ['#198754', '#0d6efd']);
+crearPastel('pieMedicos', <?= json_encode(array_keys($porMedico)) ?>, <?= json_encode(array_values($porMedico)) ?>,
+    ['#0d6efd','#198754','#ffc107','#dc3545','#6f42c1','#fd7e14','#0dcaf0','#d63384','#6c757d','#20c997']);
+</script>
+<?php endif; ?>
 <script>
 function cambiarEstado(citaId, nuevoEstado, fecha) {
     if (confirm('¿Cambiar el estado de esta cita a "' + nuevoEstado + '"?')) {
