@@ -243,6 +243,21 @@ class UsuarioModel {
         return (bool)$stmt->fetch();
     }
 
+    /** Devuelve qué campos ya existen: ['ci', 'correo', 'telefono'] (vacío si ninguno). */
+    public static function camposDuplicados($ci, $correo, $telefono): array {
+        $conexion = conexion::conectar();
+        $stmt = $conexion->prepare("SELECT ci, correo, telefono FROM usuario
+                                    WHERE ci = :ci OR correo = :correo OR telefono = :telefono");
+        $stmt->execute([':ci' => $ci, ':correo' => $correo, ':telefono' => $telefono]);
+        $dup = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $f) {
+            if ($f['ci'] === $ci)                                         $dup['ci'] = 'ci';
+            if (strcasecmp((string)$f['correo'], $correo) === 0)           $dup['correo'] = 'correo';
+            if ($f['telefono'] === $telefono)                             $dup['telefono'] = 'telefono';
+        }
+        return array_values($dup);
+    }
+
     public static function obtenerNotificaciones($uid) {
         $conexion = conexion::conectar();
         $sql  = "SELECT n.titulo, n.mensaje, tn.nombre AS tipo, n.leida, n.creado_en
