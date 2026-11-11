@@ -1,0 +1,28 @@
+llenar registro de nuevo usuario/paciente:
+
+javascript:(function(){var N=['Carlos','Lucia','Diego','Valeria','Andres','Camila','Mauricio','Daniela'];var A=['Mamani Quispe','Rojas Vega','Flores Choque','Gutierrez Lima','Condori Paz','Mendoza Arce','Salinas Ticona'];var O=['Estudiante','Docente','Ingeniero','Comerciante','Contador','Arquitecta'];var r=function(l){return l[Math.floor(Math.random()*l.length)]};var d=function(k){var s='';for(var i=0;i<k;i++){s+=Math.floor(Math.random()*10)}return s};var nom=r(N);var f=function(n,v){var e=document.querySelector('[name="'+n+'"]');if(e){e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}))}};f('nombre',nom);f('apellido',r(A));f('ci',d(7));f('telefono',r(['6','7'])+d(7));f('fecha_nac','1998-05-14');f('direccion','Calle Murillo 123, La Paz');f('ocupacion',r(O));f('correo',nom.toLowerCase()+d(4)+'@gmail.com');f('clave','Demo1234');f('clave2','Demo1234');f('matricula','MAT-'+d(5));var t=document.getElementById('terms');if(t){t.checked=true}})();
+
+llenar registro de recepcionista:
+
+javascript:(function(){var x=document.querySelector('[name="nombre_nuevo"]');if(!x||!x.form){alert('Abre primero la pestana "Nueva Cita" del recepcionista.');return}var F=x.form.elements;var N=['Marco','Sandra','Julio','Patricia','Wilson','Elena','Rodrigo','Maribel'];var A=['Quispe Mamani','Vargas Lima','Torrez Rios','Apaza Flores','Choque Rojas','Villca Paz','Arce Mendoza'];var M=['Control general','Dolor de cabeza frecuente','Chequeo anual','Dolor de espalda','Consulta por fiebre','Revision de presion arterial'];var r=function(l){return l[Math.floor(Math.random()*l.length)]};var d=function(k){var s='';for(var i=0;i<k;i++){s+=Math.floor(Math.random()*10)}return s};var s=function(n,v){if(F[n]){F[n].value=v}};var p=function(sel){if(sel&&sel.options.length>1){sel.selectedIndex=1+Math.floor(Math.random()*(sel.options.length-1))}};s('paciente','');s('nombre_nuevo',r(N));s('apellido_nuevo',r(A));s('ci_nuevo',d(7));p(F['medico']);p(F['hora']);var t=new Date();t.setDate(t.getDate()+1+Math.floor(Math.random()*20));s('fecha',t.getFullYear()+'-'+('0'+(t.getMonth()+1)).slice(-2)+'-'+('0'+t.getDate()).slice(-2));s('motivo',r(M))})();
+
+AUTOLLENADO PARA LA DEMOSTRACION
+================================
+
+CREAR UN MARCADOR (una sola vez, por cada formulario):
+ 1. En Chrome presiona Ctrl + Shift + B para mostrar la barra de marcadores.
+ 2. Clic derecho en la barra > "Agregar pagina...".
+ 3. En Nombre escribe, por ejemplo: Llenar registro.
+ 4. En URL pega la linea que empieza con "javascript:" de abajo.
+ 5. Guarda.
+
+USARLO:
+ 1. Abre el formulario correspondiente.
+ 2. Haz clic en el marcador: se llenan todas las casillas.
+ 3. Pulsa el boton de enviar (Registrarse o Agendar Cita).
+
+NOTAS:
+ - Cada clic genera datos nuevos (CI, celular y correo) para evitar duplicados.
+ - La contrasena del registro de prueba es: Demo1234
+ - Si el navegador no ejecuta el marcador: F12 > Console, escribe
+   "allow pasting" y pega la linea SIN la palabra "javascript:".
