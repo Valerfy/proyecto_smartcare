@@ -44,6 +44,8 @@
             </div>
         <?php endif; ?>
 
+        <?php $volverTema = 'oscuro'; include __DIR__ . '/../components/volver.php'; ?>
+
         <h2 class="fw-bold text-white mb-4">Gestión de Usuarios</h2>
 
         <div class="card mb-4">

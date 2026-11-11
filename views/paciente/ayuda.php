@@ -39,6 +39,7 @@ if (!isset($_SESSION['usuario_id'])) {
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/includes/navegacion.php'; ?>
             <h2 class="mb-4">Ayuda</h2>
             <div class="row">
 

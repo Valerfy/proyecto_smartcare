@@ -39,6 +39,7 @@ $rol      = $usuario['rol']      ?? 'paciente';
         </nav>
 
         <div class="p-4">
+            <?php $volverSoloRegistrar = true; include __DIR__ . '/../components/volver.php'; ?>
             <h2 class="mb-2">¡Bienvenido, <?= htmlspecialchars($nombre) ?>!</h2>
             <p class="mb-4 text-muted">Gestiona tus citas médicas de forma rápida y sencilla.</p>
 

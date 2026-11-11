@@ -20,6 +20,7 @@
                 <h5 class="mb-0 fw-bold">Mi Perfil</h5>
             </div>
         </nav>
+        <?php include __DIR__ . '/../components/volver.php'; ?>
 
         <?php if ($mensaje): ?>
         <div class="alert alert-success alert-dismissible fade show mx-0" role="alert">

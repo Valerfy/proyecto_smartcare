@@ -11,6 +11,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-7">
+                <?php include __DIR__ . '/../components/volver.php'; ?>
                 <div class="card border-0 shadow-lg">
                     <div class="card-header bg-primary text-white py-3">
                         <h5 class="mb-0">Registrar Consulta: <?= htmlspecialchars($cita['nombre'] . ' ' . $cita['apellido']) ?></h5>

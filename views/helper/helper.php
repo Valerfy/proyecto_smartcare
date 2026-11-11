@@ -19,7 +19,7 @@ $horarios = ['08:00:00','08:30:00','09:00:00','09:30:00','10:00:00','10:30:00','
 </div>
 
 <div class="container" style="max-width:1100px; margin:0 auto; padding:0 20px;">
-
+<div style="margin-top:20px;"><?php include __DIR__ . '/../components/volver.php'; ?></div>
     <?php if (!empty($mensaje)): ?>
         <div class="alert <?= strpos($mensaje, 'correctamente') !== false ? 'alert-success' : (strpos($mensaje, 'ocupado') !== false ? 'alert-warning' : 'alert-danger') ?>">
             <?= $mensaje ?>

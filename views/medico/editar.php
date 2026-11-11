@@ -13,13 +13,12 @@
     <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-content flex-grow-1 p-4">
+        <?php include __DIR__ . '/../components/volver.php'; ?>
         <div class="d-flex align-items-center gap-3 mb-4">
             <button class="sidebar-toggle d-md-none" type="button" onclick="toggleSidebar()" aria-label="Abrir menu">
                 <i class="bi bi-list"></i>
             </button>
-            <a href="index.php?controller=medico&action=misPacientes" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i>
-            </a>
+           
             <h4 class="mb-0 fw-bold">Editar Paciente</h4>
         </div>
 

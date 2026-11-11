@@ -31,6 +31,7 @@
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/includes/navegacion.php'; ?>
             <h2 class="mb-4">Mis Citas</h2>
 
             <div class="table-responsive">

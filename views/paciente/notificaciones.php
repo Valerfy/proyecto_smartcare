@@ -45,6 +45,7 @@ $iconos = [
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/includes/navegacion.php'; ?>
             <h2 class="mb-4">Notificaciones</h2>
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
