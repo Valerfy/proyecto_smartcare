@@ -215,8 +215,7 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     if (el.type === 'checkbox') { if (!el.checked && draft[k] === true) el.checked = true; }
     else if (el.value === '' && draft[k]) el.value = draft[k];
   });
-
-  /* ---------- Eventos de campos ---------- */
+  
   document.querySelectorAll('form[data-form]').forEach(form => {
     form.querySelectorAll('input').forEach(input => {
       input.addEventListener('input', () => {
@@ -250,7 +249,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     b.disabled = false; b.textContent = b.closest('form').dataset.form === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
   }));
 
-  /* ---------- Ojo de contraseña y medidor de fortaleza ---------- */
   document.querySelectorAll('[data-eye]').forEach(b => b.addEventListener('click', () => {
     const i = document.getElementById(b.dataset.eye), show = i.type === 'password';
     i.type = show ? 'text' : 'password';
@@ -265,7 +263,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     wrap.querySelector('.meter-txt').textContent = v ? ['', 'Débil', 'Regular', 'Buena', 'Fuerte'][s] : '';
   }
 
-  /* ---------- Vista previa de la foto ---------- */
   const foto = document.getElementById('register-foto');
   foto.addEventListener('change', () => {
     const box = document.getElementById('preview'), f = foto.files[0];
@@ -276,7 +273,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     } else { box.style.display = 'none'; }
   });
 
-  /* ---------- Cambio de panel con animación ---------- */
   function setMode(mode, animate) {
     const reg = mode === 'register';
     card.classList.remove('anim-left', 'anim-right'); void card.offsetWidth;
