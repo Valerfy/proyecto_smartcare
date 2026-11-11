@@ -84,6 +84,32 @@ class PacienteController {
         require_once __DIR__ . '/../views/paciente/mis-citas.php';
     }
 
+    public static function cancelarCita() {
+        self::requireAuth('paciente');
+        $uid = $_SESSION['usuario_id'];
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?controller=paciente&action=misCitas');
+            exit();
+        }
+
+        $citaId    = (int)($_POST['cita_id'] ?? 0);
+        $resultado = $citaId ? CitaModel::cancelarPorPaciente($citaId, $uid) : 'no_cancelable';
+
+        if ($resultado === 'ok') {
+            UsuarioModel::crearNotificacion(
+                $uid,
+                'Cita cancelada',
+                'Cancelaste tu cita correctamente.',
+                'advertencia',
+                $citaId
+            );
+        }
+
+        header('Location: index.php?controller=paciente&action=misCitas&msg=cita_' . $resultado);
+        exit();
+    }
+
     public static function historial() {
         self::requireAuth('paciente');
         $uid        = $_SESSION['usuario_id'];

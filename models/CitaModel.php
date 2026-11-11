@@ -3,6 +3,8 @@ require_once __DIR__ . '/../config/conexion.php';
 
 class CitaModel {
 
+    const VENTANA_CANCELACION = 180;
+
     public static function citasHoyMedico($medicoId) {
         $conexion = conexion::conectar();
         $sql  = "SELECT c.*, ec.nombre AS estado, u.nombre, u.apellido, u.ci
@@ -52,17 +54,58 @@ class CitaModel {
 
     public static function todasCitasPaciente($pacienteId) {
         $conexion = conexion::conectar();
-        $sql  = "SELECT fecha, hora, especialidad,
+        $sql  = "SELECT cita_id, fecha, hora, especialidad,
                         CONCAT('Dr(a). ', medico_nombre, ' ', medico_apellido) AS medico,
                         estado,
-                        (fecha >= CURDATE()) AS es_proxima
+                        (fecha >= CURDATE()) AS es_proxima,
+                        GREATEST(0, :ventana - TIMESTAMPDIFF(SECOND, creado_en, NOW())) AS segundos_restantes
                  FROM vw_citas_detalle
                  WHERE paciente_id = :paciente_id
                  ORDER BY fecha DESC, hora DESC";
         $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':paciente_id', $pacienteId);
+        $stmt->bindValue(':ventana',     self::VENTANA_CANCELACION, PDO::PARAM_INT);
+        $stmt->bindValue(':paciente_id', $pacienteId);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function cancelarPorPaciente($citaId, $pacienteId) {
+        $conexion = conexion::conectar();
+        try {
+            $s = $conexion->prepare(
+                "SELECT ec.nombre AS estado,
+                        TIMESTAMPDIFF(SECOND, c.creado_en, NOW()) AS transcurridos
+                 FROM cita c
+                 JOIN estado_cita ec ON ec.id = c.estado_cita_id
+                 WHERE c.id = :id AND c.paciente_id = :paciente_id"
+            );
+            $s->execute([':id' => $citaId, ':paciente_id' => $pacienteId]);
+            $cita = $s->fetch(PDO::FETCH_ASSOC);
+
+            if (!$cita || !in_array($cita['estado'], ['pendiente', 'confirmada'], true)) {
+                return 'no_cancelable';
+            }
+            if ((int)$cita['transcurridos'] > self::VENTANA_CANCELACION) {
+                return 'expirada';
+            }
+
+            $u = $conexion->prepare(
+                "UPDATE cita
+                 SET estado_cita_id = (SELECT id FROM estado_cita WHERE nombre = 'cancelada')
+                 WHERE id = :id
+                   AND paciente_id = :paciente_id
+                   AND estado_cita_id IN (SELECT id FROM estado_cita WHERE nombre IN ('pendiente','confirmada'))
+                   AND TIMESTAMPDIFF(SECOND, creado_en, NOW()) <= :ventana"
+            );
+            $u->bindValue(':id',          $citaId, PDO::PARAM_INT);
+            $u->bindValue(':paciente_id', $pacienteId, PDO::PARAM_INT);
+            $u->bindValue(':ventana',     self::VENTANA_CANCELACION, PDO::PARAM_INT);
+            $u->execute();
+            return $u->rowCount() > 0 ? 'ok' : 'expirada';
+        } catch (PDOException $e) {
+            error_log('Error cancelarPorPaciente: ' . $e->getMessage());
+            return 'error';
+        }
     }
 
     public static function horarioDisponible($medicoId, $fecha, $hora) {

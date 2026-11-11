@@ -31,8 +31,23 @@
         </nav>
 
         <div class="p-4">
-            <?php include __DIR__ . '/includes/navegacion.php'; ?>
             <h2 class="mb-4">Mis Citas</h2>
+
+            <?php
+            $alertas = [
+                'cita_agendada'      => ['success', 'Tu cita fue agendada. Tienes 3 minutos para cancelarla si lo necesitas.'],
+                'cita_ok'            => ['success', 'La cita fue cancelada correctamente.'],
+                'cita_expirada'      => ['warning', 'No se pudo cancelar: ya pasó el tiempo permitido (3 minutos).'],
+                'cita_no_cancelable' => ['danger',  'Esta cita no se puede cancelar.'],
+                'cita_error'         => ['danger',  'Ocurrió un error al cancelar la cita. Intenta nuevamente.'],
+            ];
+            $msgKey = $_GET['msg'] ?? '';
+            if (isset($alertas[$msgKey])): ?>
+                <div class="alert alert-<?= $alertas[$msgKey][0] ?> alert-dismissible fade show" role="alert">
+                    <?= $alertas[$msgKey][1] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            <?php endif; ?>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -43,12 +58,13 @@
                             <th>Especialidad</th>
                             <th>Médico</th>
                             <th>Estado</th>
+                            <th>Cancelar</th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php if (empty($todas_citas)): ?>
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 Aún no tienes ninguna cita registrada.
                             </td>
                         </tr>
@@ -72,6 +88,30 @@
                                     <?= ucfirst($c['estado']) ?>
                                 </span>
                             </td>
+                            <td>
+                                <?php
+                                $cancelable = in_array($c['estado'], ['pendiente', 'confirmada'], true);
+                                $segundos   = (int)$c['segundos_restantes'];
+                                ?>
+                                <?php if ($cancelable && $segundos > 0): ?>
+                                    <form method="POST" action="index.php?controller=paciente&action=cancelarCita"
+                                          class="d-flex align-items-center gap-2 form-cancelar"
+                                          data-segundos="<?= $segundos ?>">
+                                        <input type="hidden" name="cita_id" value="<?= (int)$c['cita_id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('¿Seguro que deseas cancelar esta cita?');">
+                                            <i class="bi bi-x-circle"></i> Cancelar
+                                        </button>
+                                        <span class="badge bg-light text-danger border contador" title="Tiempo restante para cancelar">
+                                            <i class="bi bi-clock"></i> <span class="contador-tiempo">--:--</span>
+                                        </span>
+                                    </form>
+                                <?php elseif ($cancelable): ?>
+                                    <small class="text-muted"><i class="bi bi-lock"></i> Tiempo agotado</small>
+                                <?php else: ?>
+                                    <span class="text-muted">—</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -93,6 +133,45 @@
     function cerrarSesion() {
         if (confirm('¿Cerrar sesión?')) window.location.href = '../../views/auth/login.php';
     }
+
+    (function () {
+        var forms = document.querySelectorAll('.form-cancelar');
+        if (!forms.length) return;
+
+        var fin = Date.now();
+        var items = [];
+        forms.forEach(function (f) {
+            items.push({
+                form: f,
+                label: f.querySelector('.contador-tiempo'),
+                finaliza: fin + parseInt(f.dataset.segundos, 10) * 1000
+            });
+        });
+
+        function formato(s) {
+            var m = Math.floor(s / 60), r = s % 60;
+            return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+        }
+
+        function tick() {
+            var ahora = Date.now(), activos = 0;
+            items.forEach(function (it) {
+                if (!it.form.isConnected || it.vencido) return;
+                var restante = Math.ceil((it.finaliza - ahora) / 1000);
+                if (restante <= 0) {
+                    it.vencido = true;
+                    it.form.outerHTML = '<small class="text-muted"><i class="bi bi-lock"></i> Tiempo agotado</small>';
+                } else {
+                    it.label.textContent = formato(restante);
+                    activos++;
+                }
+            });
+            if (activos === 0) clearInterval(timer);
+        }
+
+        tick();
+        var timer = setInterval(tick, 1000);
+    })();
 </script>
 <script src="../assets/js/sidebar.js"></script>
 </body>
