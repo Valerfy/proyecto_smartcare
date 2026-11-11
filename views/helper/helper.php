@@ -211,15 +211,58 @@ $horarios = ['08:00:00','08:30:00','09:00:00','09:30:00','10:00:00','10:30:00','
 
     <?php if ($tab === 'reportes'): ?>
     <div class="card">
-        <h2>Reporte de Fichas Emitidas</h2>
+                <h2>Reporte de Fichas Emitidas</h2>
 
-        <a href="../views/helper/reporte_pdf.php"
-   target="_blank"
-   class="btn btn-danger mb-3">
+        <form method="GET" action="index.php" class="form-grid" style="margin-bottom:20px;">
+            <input type="hidden" name="controller" value="helper">
+            <input type="hidden" name="action" value="index">
+            <input type="hidden" name="tab" value="reportes">
 
-   Generar Reporte PDF
+            <input type="text" name="q" placeholder="Buscar por nombre, apellido o CI"
+                   value="<?= htmlspecialchars($filtros['q']) ?>">
 
-</a>
+            <select name="medico_id">
+                <option value="">Todos los médicos</option>
+                <?php foreach ($medicos as $med): ?>
+                    <option value="<?= $med['medico_id'] ?>"
+                        <?= ($filtros['medico_id'] == $med['medico_id']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($med['nombre'] . ' ' . $med['apellido']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+             <div>
+                <small style="color:#666; display:block; margin-bottom:4px;">Desde</small>
+                <input type="date" name="fecha_desde"
+                       value="<?= htmlspecialchars($filtros['fecha_desde']) ?>">
+            </div>
+            <div>
+                <small style="color:#666; display:block; margin-bottom:4px;">Hasta</small>
+                <input type="date" name="fecha_hasta"
+                       value="<?= htmlspecialchars($filtros['fecha_hasta']) ?>">
+            </div>
+
+            <select name="tipo">
+                <option value="">Nuevos y antiguos</option>
+                <option value="Nuevo"   <?= $filtros['tipo'] === 'Nuevo'   ? 'selected' : '' ?>>Solo nuevos</option>
+                <option value="Antiguo" <?= $filtros['tipo'] === 'Antiguo' ? 'selected' : '' ?>>Solo antiguos</option>
+            </select>
+
+            <div style="display:flex; gap:10px;">
+                <button type="submit" class="btn-success">Filtrar</button>
+                <a href="index.php?controller=helper&action=index&tab=reportes"
+                   style="padding:10px 16px; text-decoration:none; color:#555;">Limpiar</a>
+            </div>
+        </form>
+
+        <p style="margin-bottom:12px;"><strong><?= count($reporteFichas) ?></strong> ficha(s) encontrada(s)</p>
+
+        <a href="index.php?controller=helper&action=exportarReportePDF&q=<?= urlencode($filtros['q']) ?>&medico_id=<?= (int)$filtros['medico_id'] ?>&fecha_desde=<?= urlencode($filtros['fecha_desde']) ?>&fecha_hasta=<?= urlencode($filtros['fecha_hasta']) ?>&tipo=<?= urlencode($filtros['tipo']) ?>"
+           target="_blank"
+           class="btn btn-danger mb-3">
+           Generar Reporte PDF
+        </a>
+        
         <?php if (empty($reporteFichas)): ?>
             <p>No existen fichas generadas.</p>
         <?php else: ?>
