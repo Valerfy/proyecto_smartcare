@@ -1,9 +1,10 @@
 <?php
 header("Content-Type: text/html; charset=UTF-8");
 
-require_once __DIR__ . '/../../models/ReporteRecepcionModel.php';
-
-$fichas = ReporteRecepcionModel::listarFichas();
+if (!isset($fichas)) {
+    http_response_code(403);
+    exit('Acceso no permitido.');
+}
 ?>
 
 <!DOCTYPE html>

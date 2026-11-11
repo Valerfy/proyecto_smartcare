@@ -25,8 +25,9 @@ class HelperController {
 $medicos    = MedicoModel::listar();
 $pacientes  = UsuarioModel::listarPacientes();
 $reporteFichas = [];
+$filtros = ReporteRecepcionModel::filtrosDesdeGet($_GET);
 if ($tab === 'reportes') {
-    $reporteFichas = ReporteRecepcionModel::listarFichas();
+    $reporteFichas = ReporteRecepcionModel::listarFichas($filtros);
 }
 
 require_once __DIR__ . '/../views/helper/helper.php';
@@ -126,6 +127,14 @@ require_once __DIR__ . '/../views/helper/helper.php';
             return '<div class="alert alert-danger">No se pudo agendar la cita. Intenta con otro horario.</div>';
         }
         return '<div class="alert alert-success">Cita agendada correctamente.</div>';
+    }
+    
+        public static function exportarReportePDF() {
+        self::requireAuth('recepcionista');
+        $filtros = ReporteRecepcionModel::filtrosDesdeGet($_GET);
+        $fichas  = ReporteRecepcionModel::listarFichas($filtros);
+        require_once __DIR__ . '/../views/helper/reporte_pdf.php';
+        exit();
     }
 
     private static function requireAuth(string $rol): void {
