@@ -45,6 +45,7 @@
 <div class="btn-acciones">
     <button onclick="window.print()" class="btn btn-print">Imprimir Ficha</button>
     <a href="index.php?controller=helper&action=index&tab=agenda" class="btn btn-back">← Regresar al Panel</a>
+    <?php include __DIR__ . '/../components/volver.php'; ?>
 </div>
 
 </body>

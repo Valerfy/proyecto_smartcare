@@ -23,6 +23,7 @@
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/../components/volver.php'; ?>
             <div class="mb-4">
                 <h4 class="fw-bold text-dark">Citas Programadas</h4>
                 <p class="text-muted small">Listado completo de atenciones y estados.</p>

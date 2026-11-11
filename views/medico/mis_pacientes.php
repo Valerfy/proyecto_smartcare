@@ -35,6 +35,7 @@
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/../components/volver.php'; ?>
             <?php if (isset($_GET['msg']) && $_GET['msg'] === 'actualizado'): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-2"></i> Datos del paciente actualizados correctamente.

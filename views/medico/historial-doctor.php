@@ -36,6 +36,7 @@
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/../components/volver.php'; ?>
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="text-muted mb-0">
                     <?= count($historiales ?? []) ?> registro(s)

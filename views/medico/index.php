@@ -23,6 +23,7 @@
         </nav>
 
         <div class="container-fluid px-4">
+            <?php $volverSoloRegistrar = true; include __DIR__ . '/../components/volver.php'; ?>
             <?php if (isset($_GET['msg']) && $_GET['msg'] == 'exito'): ?>
                 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i> Paciente atendido y guardado en historial.

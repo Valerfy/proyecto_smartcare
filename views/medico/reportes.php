@@ -23,6 +23,7 @@
         </nav>
 
         <div class="p-4">
+            <?php include __DIR__ . '/../components/volver.php'; ?>
 
             <?php
                 $totalCompletadas = 0; $totalPendientes = 0; $totalCanceladas = 0;
