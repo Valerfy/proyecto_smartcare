@@ -8,7 +8,6 @@ $registroOk = (($_GET['registro'] ?? '') === 'ok');
 
 $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
 
-/** Dibuja un campo con icono, mensaje de error y (opcional) ojo / medidor de contraseña. */
 $campo = function (string $form, string $name, string $label, string $icon, array $o = []) use ($old, $errores, $e) {
     $type  = $o['type'] ?? 'text';
     $id    = "$form-$name";
@@ -119,7 +118,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
       </div>
     </section>
 
-    <!-- ============ PANEL AZUL DESLIZANTE ============ -->
     <aside class="auth-overlay" aria-hidden="false">
         <div class="ov ov--login">
             <div class="glass"><img src="../assets/img/logo_cns.png" alt="CNS"><span class="chip c1"><i class="bi bi-calendar2-check"></i></span><span class="chip c2"><i class="bi bi-shield-check"></i></span></div>
@@ -151,7 +149,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
   const mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const blocked = ['@cns.com', '@cns.org.bo', '@cns.rec.bo'];
 
-  /* ---------- Reglas por formulario (devuelven '' si es válido) ---------- */
   const email = v => !v ? 'Ingresa tu correo.' : v.length > 120 || !mailRe.test(v) ? 'Correo electrónico inválido.' : '';
   const person = (n) => v => !v ? 'Ingresa tu ' + n + '.' : v.length < 2 || v.length > 40 ? 'Entre 2 y 40 caracteres.' : !nameRe.test(v) ? 'Solo letras y espacios.' : '';
   const rules = {
@@ -190,7 +187,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     }
   };
 
-  /* ---------- Mostrar / limpiar error de un campo ---------- */
   function setState(input, msg) {
     const wrap = input.closest('.field'); if (!wrap) return;
     wrap.classList.toggle('is-invalid', !!msg);
@@ -203,7 +199,6 @@ $campo = function (string $form, string $name, string $label, string $icon, arra
     const msg = fn(v, form); setState(input, msg); return !msg;
   }
 
-  /* ---------- Borrador: los datos NO se pierden al refrescar ---------- */
   function readDraft() { try { return JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch (_) { return {}; } }
   function saveDraft(input) {
     try {
