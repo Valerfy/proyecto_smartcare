@@ -13,12 +13,10 @@ class AuthController {
         $this->login();
     }
 
-    /** Muestra la vista unificada (login + registro) con el panel indicado. */
     private function render(string $modo, array $old = [], array $errores = [], string $error = ''): void {
         require __DIR__ . '/../views/auth/auth.php';
     }
 
-    /* ------------------------------------------------------------------ LOGIN */
     public function login(): void {
         $error = '';
         $old   = [];
@@ -78,7 +76,6 @@ class AuthController {
         $this->render('login', $old, [], $error);
     }
 
-    /* --------------------------------------------------------------- REGISTRO */
     public function register(): void {
         $old     = [];
         $errores = [];
@@ -97,7 +94,6 @@ class AuthController {
             $clave2 = $_POST['clave2'] ?? '';
             extract($old, EXTR_SKIP);
 
-            // Nombre y apellido
             foreach (['nombre' => 'Nombre', 'apellido' => 'Apellido'] as $k => $et) {
                 $len = mb_strlen($old[$k]);
                 if ($old[$k] === '')                                   $errores[$k] = "Ingresa tu " . strtolower($et) . ".";
@@ -105,15 +101,12 @@ class AuthController {
                 elseif (!preg_match(self::REGEX_NOMBRE, $old[$k]))     $errores[$k] = "$et: solo letras y espacios.";
             }
 
-            // CI (5-9 dígitos, complemento opcional: 1234567-1A)
             if ($ci === '')                                            $errores['ci'] = 'Ingresa tu CI.';
             elseif (!preg_match('/^\d{5,9}(-[0-9A-Z]{1,2})?$/', $ci))  $errores['ci'] = 'CI inválido (5 a 9 dígitos, complemento opcional: 1234567-1A).';
 
-            // Celular
             if ($telefono === '')                                      $errores['telefono'] = 'Ingresa tu celular.';
             elseif (!preg_match('/^[67]\d{7}$/', $telefono))           $errores['telefono'] = 'Celular inválido (8 dígitos, empieza con 6 o 7).';
 
-            // Fecha de nacimiento
             if ($fecha_nac === '') {
                 $errores['fecha_nac'] = 'Ingresa tu fecha de nacimiento.';
             } else {
@@ -127,7 +120,6 @@ class AuthController {
                 }
             }
 
-            // Ocupación, dirección, matrícula
             $lo = mb_strlen($ocupacion);
             if ($ocupacion === '')                                     $errores['ocupacion'] = 'Ingresa tu ocupación.';
             elseif ($lo < 3 || $lo > 50 || !preg_match('/^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ .,\-]+$/u', $ocupacion))
@@ -138,7 +130,6 @@ class AuthController {
             if ($matricula === '')                                     $errores['matricula'] = 'Ingresa tu número de matrícula.';
             elseif (!preg_match('/^[A-Za-z0-9\-]{3,20}$/', $matricula)) $errores['matricula'] = 'Matrícula inválida (3 a 20 letras, números o guiones).';
 
-            // Correo
             if ($correo === '')                                        $errores['correo'] = 'Ingresa tu correo.';
             elseif (mb_strlen($correo) > 120 || !filter_var($correo, FILTER_VALIDATE_EMAIL))
                                                                        $errores['correo'] = 'Correo electrónico inválido.';
@@ -151,16 +142,13 @@ class AuthController {
                 }
             }
 
-            // Contraseña
             if (strlen($clave) < 8 || strlen($clave) > 72)             $errores['clave'] = 'La contraseña debe tener entre 8 y 72 caracteres.';
             elseif (!preg_match('/[A-Za-z]/', $clave) || !preg_match('/\d/', $clave))
                                                                        $errores['clave'] = 'La contraseña debe incluir al menos una letra y un número.';
             if ($clave2 === '' || $clave !== $clave2)                  $errores['clave2'] = 'Las contraseñas no coinciden.';
 
-            // Términos
             if ($old['terminos'] !== '1')                              $errores['terminos'] = 'Debes aceptar los términos y condiciones.';
 
-            // Foto (opcional): solo imágenes reales JPG/PNG de hasta 2 MB
             $extFoto = null;
             if (!empty($_FILES['foto']['name'])) {
                 if ($_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
@@ -175,7 +163,6 @@ class AuthController {
                 }
             }
 
-            // Duplicados (solo si lo anterior es válido para no consultar de más)
             if (!$errores) {
                 try {
                     $dup = UsuarioModel::camposDuplicados($ci, $correo, $telefono);
