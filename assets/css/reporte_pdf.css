@@ -1,12 +1,10 @@
-/* Estilos compartidos de los reportes PDF (médico y recepción).
-   Paleta institucional del login: #0b6b57 / #2a9d82 / #004840 */
+
 :root{
     --a1:#0b6b57; --a2:#2a9d82; --a3:#004840;
     --ink:#0f172a; --mut:#64748b; --line:#e2e8f0; --soft:#f1f7f5;
 }
 *{ box-sizing:border-box; }
 
-/* Obliga a imprimir los colores de fondo (si no, salen en blanco) */
 html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
 body{
@@ -18,7 +16,6 @@ body{
     line-height:1.35;
 }
 
-/* ---------- Encabezado ---------- */
 .rep-header{
     display:flex; align-items:center; justify-content:space-between;
     border-bottom:3px solid var(--a1);
@@ -32,7 +29,6 @@ body{
 .doc-title h1{ margin:0; font-size:22px; color:var(--a1); letter-spacing:.01em; }
 .doc-title small{ color:var(--mut); font-size:11px; }
 
-/* ---------- Datos del reporte ---------- */
 .info-grid{
     display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px 18px;
     background:var(--soft); border:1px solid var(--line); border-radius:8px;
@@ -41,7 +37,6 @@ body{
 .info-grid .k{ font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); }
 .info-grid .v{ font-weight:600; font-size:12px; }
 
-/* ---------- Títulos de sección ---------- */
 .sec{
     margin:20px 0 10px; font-size:14px; color:var(--a3);
     border-left:4px solid var(--a2); padding-left:8px;
@@ -49,7 +44,6 @@ body{
 }
 .sec .count{ color:var(--mut); font-weight:400; font-size:11px; margin-left:6px; }
 
-/* ---------- Tarjetas de resumen ---------- */
 .cards{
     display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:10px;
 }
@@ -64,7 +58,6 @@ body{
 .card .d{ margin-top:3px; min-height:15px; }
 .nota{ font-size:10px; color:var(--mut); margin:8px 0 0; }
 
-/* ---------- Gráficos ---------- */
 .charts{
     display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px;
 }
@@ -76,7 +69,6 @@ body{
 .chart-box canvas{ max-width:100%; }
 .sin-datos{ color:var(--mut); padding:70px 0; font-size:11px; }
 
-/* ---------- Tabla de datos ---------- */
 table.data{ width:100%; border-collapse:collapse; font-size:10.5px; }
 table.data thead{ display:table-header-group; }          /* repite el encabezado en cada página */
 table.data th{
@@ -100,7 +92,6 @@ table.data .alerta{ color:#b45309; font-size:9.5px; }
 .badge.nuevo{ background:#dcfce7; color:#166534; }
 .badge.antiguo{ background:#dbeafe; color:#1e40af; }
 
-/* ---------- Firmas y pie ---------- */
 .firmas{
     display:flex; justify-content:space-around; margin-top:70px;
     break-inside:avoid; page-break-inside:avoid;
@@ -119,7 +110,6 @@ table.data .alerta{ color:#b45309; font-size:9.5px; }
     padding:8px 16px; font-size:12px; cursor:pointer;
 }
 
-/* ---------- Impresión ---------- */
 @page{
     size:A4 landscape;
     margin:12mm 10mm 16mm;
