@@ -148,7 +148,6 @@ require_once __DIR__ . '/../views/helper/helper.php';
             }
         }
 
-        // Comparación con el periodo anterior (solo si hay Desde y Hasta)
         $periodoAnt = rep_periodo_anterior($filtros['fecha_desde'], $filtros['fecha_hasta']);
         $antTotal = $antNuevos = $antAntiguos = null;
         if ($periodoAnt) {
