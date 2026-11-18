@@ -199,11 +199,13 @@ class PacienteController {
     }
 
     private static function fotoUrl(?string $foto, int $uid): string {
-    $ruta = $_SERVER['DOCUMENT_ROOT'] . '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . $foto;
-    return (!empty($foto) && file_exists($ruta))
-        ? '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . htmlspecialchars($foto)
-        : 'https://i.pravatar.cc/64?u=' . $uid;
-}
+        $archivo = basename((string)$foto);
+        if ($archivo !== '' && is_file(__DIR__ . '/../assets/img/' . $archivo)) {
+            $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/\\');
+            return $base . '/assets/img/' . rawurlencode($archivo);
+        }
+        return 'https://i.pravatar.cc/64?u=' . $uid;
+    }
 
     private static function requireAuth(string $rol): void {
         if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== $rol) {
