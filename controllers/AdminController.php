@@ -9,8 +9,9 @@ class AdminController {
 
         $uid        = $_SESSION['usuario_id'];
         $userData   = UsuarioModel::findById($uid);
-        $fotoActual = !empty($userData['foto']) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . $userData['foto'])
-        ? '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . $userData['foto']
+        $archivoFoto = basename((string)($userData['foto'] ?? ''));
+        $fotoActual  = ($archivoFoto !== '' && is_file(__DIR__ . '/../assets/img/' . $archivoFoto))
+            ? rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/\\') . '/assets/img/' . rawurlencode($archivoFoto)
             : 'https://i.pravatar.cc/100';
 
         $mensaje      = '';
