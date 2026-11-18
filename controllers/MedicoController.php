@@ -196,13 +196,14 @@ public static function reportes() {
         require_once __DIR__ . '/../views/medico/reporte_pdf.php';
         exit();
     }
-   private static function fotoUrl(?string $foto): string {
-    $ruta = $_SERVER['DOCUMENT_ROOT'] . '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . $foto;
-    return (!empty($foto) && file_exists($ruta))
-        ? '/SmartCareCNS_MVC/SmartCareCNS_MVC/assets/img/' . htmlspecialchars($foto)
-        : 'https://cdn-icons-png.flaticon.com/512/3774/3774299.png';
-}
-
+      private static function fotoUrl(?string $foto): string {
+        $archivo = basename((string)$foto);
+        if ($archivo !== '' && is_file(__DIR__ . '/../assets/img/' . $archivo)) {
+            $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/\\');
+            return $base . '/assets/img/' . rawurlencode($archivo);
+        }
+        return 'https://cdn-icons-png.flaticon.com/512/3774/3774299.png';
+    }
     private static function requireAuth(string $rol): void {
         if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== $rol) {
             header('Location: index.php?controller=auth&action=login');
