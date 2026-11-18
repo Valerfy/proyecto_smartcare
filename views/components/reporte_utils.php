@@ -1,10 +1,5 @@
 <?php
-/**
- * Funciones compartidas por los reportes (pantalla y PDF) del médico y de recepción.
- */
-
 if (!function_exists('rep_pct')) {
-    /** Porcentaje de $parte sobre $total, ej. "70 %" o "33,3 %". */
     function rep_pct($parte, $total): string {
         if ((float)$total <= 0) return '0 %';
         $v = round(((float)$parte / (float)$total) * 100, 1);
@@ -12,18 +7,11 @@ if (!function_exists('rep_pct')) {
         return $txt . ' %';
     }
 }
-
 if (!function_exists('rep_delta')) {
-    /**
-     * Etiqueta de comparación contra el periodo anterior.
-     * $anterior = null  -> no hay periodo para comparar (devuelve '').
-     * $subeEsBueno: true = subir es bueno (verde), false = subir es malo (rojo), null = neutro (gris).
-     */
     function rep_delta($actual, $anterior, $subeEsBueno = null): string {
         if ($anterior === null) return '';
         $actual   = (int)$actual;
         $anterior = (int)$anterior;
-
         if ($actual === $anterior) {
             $txt   = '= igual que antes (' . $anterior . ')';
             $color = '#64748b';
@@ -47,13 +35,7 @@ if (!function_exists('rep_delta')) {
              . htmlspecialchars($txt) . '</span>';
     }
 }
-
 if (!function_exists('rep_periodo_anterior')) {
-    /**
-     * Periodo inmediatamente anterior, de igual duración.
-     * Requiere Desde y Hasta; si falta alguno devuelve null.
-     * @return array{0:string,1:string}|null  [desde, hasta] en Y-m-d
-     */
     function rep_periodo_anterior(string $desde, string $hasta): ?array {
         if ($desde === '' || $hasta === '') return null;
         try {
@@ -77,7 +59,6 @@ if (!function_exists('rep_fecha')) {
 }
 
 if (!function_exists('rep_estado')) {
-    /** Total de citas de un estado dentro de $estadisticas['citas_por_estado']. */
     function rep_estado(?array $estadisticas, string $estado): int {
         foreach (($estadisticas['citas_por_estado'] ?? []) as $e) {
             if ($e['estado'] === $estado) return (int)$e['total'];
@@ -93,9 +74,7 @@ if (!function_exists('rep_total_citas')) {
         return $t;
     }
 }
-
 if (!function_exists('rep_edad_rangos')) {
-    /** Pacientes únicos (por CI) agrupados por rango de edad. Solo devuelve rangos con datos. */
     function rep_edad_rangos(array $historiales): array {
         $rangos = [
             'Menores de 18' => 0,
@@ -127,9 +106,7 @@ if (!function_exists('rep_edad_rangos')) {
         return array_filter($rangos, fn($n) => $n > 0);
     }
 }
-
 if (!function_exists('rep_sangre_pacientes')) {
-    /** Pacientes únicos (por CI) agrupados por tipo de sangre, de mayor a menor. */
     function rep_sangre_pacientes(array $historiales): array {
         $porPaciente = [];
         foreach ($historiales as $i => $h) {
