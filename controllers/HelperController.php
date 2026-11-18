@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../models/UsuarioModel.php';
 require_once __DIR__ . '/../models/CitaModel.php';
 require_once __DIR__ . '/../models/MedicoModel.php';
@@ -84,7 +85,7 @@ require_once __DIR__ . '/../views/helper/helper.php';
     $paciente = trim($cita['paciente_nombre'] . ' ' . $cita['paciente_apellido']);
     $medico   = trim($cita['medico_nombre'] . ' ' . $cita['medico_apellido']);
 
-    $numero_ficha = str_pad($id, 4, '0', STR_PAD_LEFT);
+    $numero_ficha = str_pad((string)$id, 4, '0', STR_PAD_LEFT);
 
     require_once __DIR__ . '/../views/helper/ficha.php';
 }

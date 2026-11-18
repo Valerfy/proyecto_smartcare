@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../models/UsuarioModel.php';
 
 class AuthController {
@@ -8,17 +9,17 @@ class AuthController {
     private const DOMINIOS_BLOQUEADOS = ['@cns.com', '@cns.org.bo', '@cns.rec.bo'];
     private const REGEX_NOMBRE = '/^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ]+(?: [A-Za-zÁÉÍÓÚÜáéíóúüÑñ]+)*$/u';
 
-    public function index() {
+    public function index(): void {
         $this->login();
     }
 
     /** Muestra la vista unificada (login + registro) con el panel indicado. */
-    private function render(string $modo, array $old = [], array $errores = [], string $error = '') {
+    private function render(string $modo, array $old = [], array $errores = [], string $error = ''): void {
         require __DIR__ . '/../views/auth/auth.php';
     }
 
     /* ------------------------------------------------------------------ LOGIN */
-    public function login() {
+    public function login(): void {
         $error = '';
         $old   = [];
 
@@ -78,7 +79,7 @@ class AuthController {
     }
 
     /* --------------------------------------------------------------- REGISTRO */
-    public function register() {
+    public function register(): void {
         $old     = [];
         $errores = [];
 
@@ -220,7 +221,7 @@ class AuthController {
         $this->render('register', $old, $errores);
     }
 
-    public function logout() {
+    public function logout(): void {
         $_SESSION = [];
         if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();

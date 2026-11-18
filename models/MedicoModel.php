@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../config/conexion.php';
 
 class MedicoModel {
@@ -128,7 +129,7 @@ class MedicoModel {
         return $resultado;
     }
 
-    public static function atiendeEn($medicoId, $fecha, $hora): bool {
+    public static function atiendeEn(int $medicoId, string $fecha, string $hora): bool {
         $ts = strtotime($fecha);
         if ($ts === false) return false;
         $dia = (int)date('N', $ts);
@@ -136,7 +137,7 @@ class MedicoModel {
         return in_array(substr((string)$hora, 0, 5), $horas, true);
     }
 
-    private static function generarHoras($inicio, $fin): array {
+    private static function generarHoras(string $inicio, string $fin): array {
         $horas = [];
         $t = strtotime('1970-01-01 ' . $inicio);
         $f = strtotime('1970-01-01 ' . $fin);

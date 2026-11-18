@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../models/HistorialModel.php';
 require_once __DIR__ . '/../models/MedicoModel.php';
 require_once __DIR__ . '/../models/ReporteRecepcionModel.php';

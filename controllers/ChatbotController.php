@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 class ChatbotController
 {
@@ -12,7 +13,7 @@ class ChatbotController
         if (session_status() === PHP_SESSION_NONE) session_start();
 
         $mensaje   = trim($_POST['mensaje']    ?? '');
-        $sessionId = $_POST['session_id']      ?? ($_SESSION['usuario_id'] ?? 'guest');
+        $sessionId = (string)($_POST['session_id'] ?? ($_SESSION['usuario_id'] ?? 'guest'));
 
         if (empty($mensaje)) {
             echo json_encode([
@@ -347,7 +348,7 @@ PROMPT;
 
     private function limpiarRespuesta(string $texto): string
     {
-        $texto = preg_replace('/<think>.*?<\/think>/si', '', $texto);
+        $texto = (string)preg_replace('/<think>.*?<\/think>/si', '', $texto);
         return trim($texto);
     }
 

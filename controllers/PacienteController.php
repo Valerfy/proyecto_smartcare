@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../models/UsuarioModel.php';
 require_once __DIR__ . '/../models/CitaModel.php';
 require_once __DIR__ . '/../models/HistorialModel.php';
@@ -8,7 +9,7 @@ class PacienteController {
 
     public static function index() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $proximas   = CitaModel::proximasPaciente($uid, 10);
@@ -17,7 +18,7 @@ class PacienteController {
 
     public static function solicitarCita() {
     self::requireAuth('paciente');
-    $uid            = $_SESSION['usuario_id'];
+    $uid            = (int)$_SESSION['usuario_id'];
     $usuario        = UsuarioModel::findById($uid);
     $fotoPerfil     = self::fotoUrl($usuario['foto'] ?? '', $uid);
     $medicos        = MedicoModel::listar();
@@ -77,7 +78,7 @@ class PacienteController {
 
     public static function misCitas() {
         self::requireAuth('paciente');
-        $uid         = $_SESSION['usuario_id'];
+        $uid         = (int)$_SESSION['usuario_id'];
         $usuario     = UsuarioModel::findById($uid);
         $fotoPerfil  = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $todas_citas = CitaModel::todasCitasPaciente($uid);
@@ -86,7 +87,7 @@ class PacienteController {
 
     public static function cancelarCita() {
         self::requireAuth('paciente');
-        $uid = $_SESSION['usuario_id'];
+        $uid = (int)$_SESSION['usuario_id'];
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?controller=paciente&action=misCitas');
@@ -112,7 +113,7 @@ class PacienteController {
 
     public static function historial() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $historial  = HistorialModel::historialPaciente($uid);
@@ -121,7 +122,7 @@ class PacienteController {
 
     public static function perfil() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $mensaje    = '';
@@ -158,7 +159,7 @@ class PacienteController {
 
     public static function notificaciones() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $userData   = $usuario;
@@ -173,7 +174,7 @@ class PacienteController {
 
     public static function seguro() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $seguro     = UsuarioModel::obtenerSeguro($uid);
@@ -182,7 +183,7 @@ class PacienteController {
 
     public static function pagos() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         $pagos      = UsuarioModel::obtenerPagos($uid);
@@ -192,7 +193,7 @@ class PacienteController {
 
     public static function ayuda() {
         self::requireAuth('paciente');
-        $uid        = $_SESSION['usuario_id'];
+        $uid        = (int)$_SESSION['usuario_id'];
         $usuario    = UsuarioModel::findById($uid);
         $fotoPerfil = self::fotoUrl($usuario['foto'] ?? '', $uid);
         require_once __DIR__ . '/../views/paciente/ayuda.php';

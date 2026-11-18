@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 if (!function_exists('mb_strtolower')) {
     function mb_strtolower(string $texto, ?string $codificacion = null): string
     {

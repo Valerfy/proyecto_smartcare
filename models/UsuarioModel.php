@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../config/conexion.php';
 
 class UsuarioModel {
@@ -14,7 +15,7 @@ class UsuarioModel {
         return $rolBD;
     }
 
-    public static function autenticar($correo, $clave) {
+    public static function autenticar(string $correo, string $clave): array|false {
         $conexion = conexion::conectar();
         $sql  = "SELECT u.*,
                         CASE r.nombre WHEN 'administrador' THEN 'admin' ELSE r.nombre END AS rol
@@ -58,9 +59,11 @@ class UsuarioModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function registrar($nombre, $apellido, $ci, $telefono, $correo,
-                                      $clave, $fecha_nac, $direccion, $matricula,
-                                      $ocupacion, $foto, $rol = 'paciente', $especialidadId = null) {
+    public static function registrar(string $nombre, string $apellido, string $ci,
+                                      string $telefono, string $correo, string $clave,
+                                      ?string $fecha_nac, string $direccion, ?string $matricula,
+                                      ?string $ocupacion, ?string $foto,
+                                      string $rol = 'paciente', ?int $especialidadId = null): int {
         $rolBD = self::nombreRolBD($rol);
         if (!in_array($rolBD, self::ROLES_BD, true)) {
             throw new InvalidArgumentException('Rol inválido.');
@@ -244,7 +247,7 @@ class UsuarioModel {
     }
 
     /** Devuelve qué campos ya existen: ['ci', 'correo', 'telefono'] (vacío si ninguno). */
-    public static function camposDuplicados($ci, $correo, $telefono): array {
+    public static function camposDuplicados(string $ci, string $correo, string $telefono): array {
         $conexion = conexion::conectar();
         $stmt = $conexion->prepare("SELECT ci, correo, telefono FROM usuario
                                     WHERE ci = :ci OR correo = :correo OR telefono = :telefono");
